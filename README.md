@@ -15,13 +15,15 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Prerequisites
 
-You need to have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed on your machine.
+You need to have [Node.js](https://nodejs.org/), [npm](https://www.npmjs.com/), and [MongoDB](https://www.mongodb.com/try/download/community) installed on your machine **with Replica Set enabled**.  
+For instructions on enabling Replica Set in MongoDB, see the [MongoDB Replica Set Quick Start guide](https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set/).
+_-To Enable Database Session Transactions_
 
 ### Installation
 
 1.  Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/abanobmossad/fintech-system.git
     ```
 2.  Navigate to the project directory:
     ```bash
@@ -51,8 +53,8 @@ You need to have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/
   ```
 - **Production mode:**
   `bash
-  npm run start:prod
-  `
+npm run start:prod
+`
   The application will be running on `http://localhost:3030`.
 
 ### Docker
@@ -65,7 +67,7 @@ To build and run the application using Docker, follow these steps:
     docker build -t fintech-system .
     ```
 
-2.  ** Run MongoDB container**
+2.  **Run MongoDB container**
     ```bash
     docker run -d \
         --name mongodb \
@@ -90,36 +92,13 @@ The application will be accessible at `http://localhost:3030`.
 
 ### Using Docker Compose
 
-To run the application and the MongoDB database together, you can use Docker Compose. This is the recommended way to run the application during development.
+To run the application and the MongoDB database together, you can use Docker Compose. This is the recommended way to run the application.
 
 1.  **Start the services:**
 
     ```bash
     docker-compose up --build
     ```
-
-## API Documentation
-
-### Postman Collection
-
-We've provided a Postman collection to help you interact with the API endpoints. The collection includes examples of all available API requests.
-
-**Location:** [`docs/fintech-system.postman_collection.json`](docs/fintech-system.postman_collection.json)
-
-**How to use:**
-1. Import the collection into Postman
-2. Set up the following environment variable in Postman:
-   - `base_url`: `http://localhost:3030` (or your deployed URL)
-
-**Available Endpoints:**
-- **Accounts**
-  - `POST /accounts` - Create a new account
-  - `GET /accounts/:id/balance` - Get account balance
-- **Transactions**
-  - `POST /transactions` - Create a new transaction
-  - `GET /transactions/account/:accountId` - Get transaction history for an account
-
-For detailed request and response examples, please refer to the Postman collection.
 
     To run in detached mode:
 
@@ -148,6 +127,22 @@ For detailed request and response examples, please refer to the Postman collecti
   npm run test:cov
   ```
 
+## API Documentation
+
+### Postman Collection
+
+We've provided a Postman collection to help you interact with the API endpoints. The collection includes examples of all available API requests.
+
+**Location:** [`docs/fintech-system.postman_collection.json`](docs/fintech-system.postman_collection.json)
+
+**How to use:**
+
+1. Import the collection into Postman
+2. Set up the following environment variable in Postman:
+   - `base_url`: `http://localhost:3030` (or your deployed URL)
+
+For detailed request and response examples, please refer to the Postman collection.
+
 ## API Reference
 
 The API is documented using Swagger. Once the application is running, you can access the interactive API documentation at [`http://localhost:3030/api`](http://localhost:3030/api).
@@ -169,31 +164,6 @@ The API is documented using Swagger. Once the application is running, you can ac
 - `GET /accounts/:id/balance`
   - **Description:** Retrieves the balance for a specific user account.
   - **Parameters:** `id` (string) - The account's unique ID.
-
-### Transaction Endpoints
-
-- `POST /transactions/deposit`
-  - **Description:** Deposits funds into an account.
-  - **Body:**
-    ```json
-    {
-      "accountId": "string",
-      "amount": "number"
-    }
-    ```
-  - **Response:** The created transaction object.
-
-- `POST /transactions/withdraw`
-  - **Description:** Withdraws funds from an account.
-  - **Body:**
-    ```json
-    {
-      "accountId": "string",
-      "amount": "number"
-    }
-    ```
-  - **Response:** The created transaction object.
-  - **Response:** The account object with the current balance.
 
 ### Transaction Endpoints
 
