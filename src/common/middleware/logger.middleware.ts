@@ -5,8 +5,7 @@ import { logger } from '../logger/winston.config';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private morganMiddleware = morgan(
-    ':method :url :status :res[content-length] - :response-time ms',
+  private morganMiddleware = morgan('dev',
     {
       stream: {
         write: (message: string) => {

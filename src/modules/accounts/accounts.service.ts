@@ -28,11 +28,8 @@ export class AccountsService {
     return account;
   }
 
-  async findByEmail(email: string): Promise<AccountDocument> {
+  async findByEmail(email: string): Promise<AccountDocument | null> {
     const account = await this.accountModel.findOne({ email }).exec();
-    if (!account) {
-      throw new NotFoundException(`Account with email #${email} not found`);
-    }
     return account;
   }
 

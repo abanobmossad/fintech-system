@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Create the production image
-FROM node:20-alpine
+FROM node:20-alpine3.19
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -32,7 +32,7 @@ RUN npm install --only=production
 COPY --from=builder /usr/src/app/dist ./dist
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 3030
 
 # Command to run the application
 CMD ["node", "dist/main"]

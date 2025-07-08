@@ -11,7 +11,7 @@ export class TransactionsService {
     @InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>,
     private readonly accountsService: AccountsService,
     @InjectConnection() private readonly connection: Connection,
-  ) {}
+  ) { }
 
   /**
    * Helper to handle session lifecycle for atomic transactions.
@@ -25,7 +25,8 @@ export class TransactionsService {
       return result;
     } catch (error) {
       await session.abortTransaction();
-      throw new InternalServerErrorException(error.message);
+      throw error;
+
     } finally {
       session.endSession();
     }

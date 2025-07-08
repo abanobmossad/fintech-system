@@ -7,6 +7,7 @@ const logFormat = printf(({ level, message, timestamp: ts }) => {
 });
 
 export const winstonConfig = {
+  level: 'http', // or 'debug'/'info' based on environment
   levels: {
     error: 0,
     warn: 1,

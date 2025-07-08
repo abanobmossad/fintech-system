@@ -19,6 +19,15 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect({
+        name: 'Fintech System API',
+        description: 'A secure and scalable fintech system for managing accounts and transactions',
+        version: '1.0.0',
+        endpoints: {
+          accounts: '/accounts',
+          transactions: '/transactions',
+          apiDocumentation: '/api'
+        }
+      });
   });
 });

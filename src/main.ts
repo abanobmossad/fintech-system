@@ -5,7 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './common/logger/winston.config';
+import { logger, winstonConfig } from './common/logger/winston.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -27,7 +27,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const port = configService.get<number>('config.port', 3000);
-  await app.listen(port);
+  await app.listen(port).then(() => {
+    logger.info(`Fintech System API is running on: http://localhost:${port}`);
+  });
 }
+
 bootstrap();
 

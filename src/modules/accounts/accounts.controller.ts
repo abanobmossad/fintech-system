@@ -3,6 +3,7 @@ import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Account } from './schemas/account.schema';
+import { Sanitize } from '../../common/interceptors/sanitize.interceptor';
 
 @ApiTags('Accounts')
 @Controller('accounts')
@@ -21,6 +22,7 @@ export class AccountsController {
   @ApiOperation({ summary: 'Check the balance of an account' })
   @ApiResponse({ status: 200, description: 'The account balance.', type: Account })
   @ApiResponse({ status: 404, description: 'Account not found.' })
+  @Sanitize(['mobile', 'email', 'password'])
   getBalance(@Param('id') id: string): Promise<Account> {
     return this.accountsService.findById(id);
   }

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ValidationPipe } from '@nestjs/common';
 import { TransactionsController } from '../src/modules/transactions/transactions.controller';
 import { TransactionsService } from '../src/modules/transactions/transactions.service';
 import { CreateTransactionDto } from '../src/modules/transactions/dto/create-transaction.dto';
@@ -16,7 +17,7 @@ describe('TransactionsController', () => {
     createdAt: new Date(),
   };
 
-  const mockError = new Error('Database error');
+  const mockError = new InternalServerErrorException();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,6 +33,15 @@ describe('TransactionsController', () => {
       ],
     }).compile();
 
+    // Create a testing app with validation pipes
+    const app = module.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }));
+    await app.init();
+    
     controller = module.get<TransactionsController>(TransactionsController);
     service = module.get<TransactionsService>(TransactionsService);
   });
@@ -68,9 +78,21 @@ describe('TransactionsController', () => {
     it('should handle validation errors during deposit', async () => {
       const invalidDto = { ...createTransactionDto, amount: -100 };
       
-      await expect(controller.deposit(invalidDto as any))
-        .rejects
-        .toThrow(BadRequestException);
+      // Test the DTO validation directly
+      const dto = new CreateTransactionDto();
+      Object.assign(dto, invalidDto);
+      
+      // Validate the DTO
+      const validationPipe = new ValidationPipe();
+      const errors = await validationPipe.transform(dto, {
+        type: 'body',
+        metatype: CreateTransactionDto,
+      }).catch(err => {
+        const response = err.getResponse();
+        return Array.isArray(response.message) ? response.message : [response.message];
+      });
+      
+      expect(errors).toContain('amount must be a positive number');
     });
   });
 
